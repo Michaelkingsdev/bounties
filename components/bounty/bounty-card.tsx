@@ -1,7 +1,7 @@
-import * as React from "react";
+"use client";
+
 import {
   Card,
-  CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Clock, Users, DollarSign } from "lucide-react";
+import { Clock, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
 
@@ -97,12 +97,20 @@ export function BountyCard({
   return (
     <Card
       className={cn(
-        "overflow-hidden w-xs rounded-4xl cursor-pointer transition-all duration-300",
+        "overflow-hidden w-full max-w-xs  rounded-4xl cursor-pointer transition-all duration-300",
         "hover:shadow-lg hover:border-primary/60 hover:scale-[1.02]",
         "border border-slate-200 dark:border-slate-800",
-        variant === "list" && "flex flex-col md:flex-row",
+        variant === "list" && "flex flex-col",
       )}
+      role="button"
+      tabIndex={0}
       onClick={onClick}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onClick?.();
+        }
+      }}
     >
       {/* Main Content Section */}
 
@@ -113,7 +121,10 @@ export function BountyCard({
         )}
       >
         <CardHeader
-          className={cn("pb-3 px-4 sm:px-5", variant === "list" && "md:flex-1 md:pb-0")}
+          className={cn(
+            "pb-3 px-4 sm:px-5",
+            variant === "list" && "md:flex-1 md:pb-0",
+          )}
         >
           {/* Header Row with Status and Budget */}
 
@@ -193,7 +204,7 @@ export function BountyCard({
 
       {/* Footer with Creator and Meta Info */}
 
-      <CardFooter className="border-t border-[#f0f0f0] dark:border-slate-700 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-900/50 dark:to-transparent flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 justify-between text-xs text-slate-600 dark:text-slate-400 py-3 px-4 sm:px-5">
+      <CardFooter className="border-t border-[#f0f0f0] dark:border-slate-700 flex flex-wrap sm:items-center justify-center md:justify-between gap-3 py-3 px-4 text-xs text-slate-600 dark:text-slate-400">
         {/* Creator Info */}
         <div className="flex items-center gap-2 min-w-0 order-1 sm:order-none">
           <Avatar className="h-6 w-6 border border-slate-200 dark:border-slate-700 flex-shrink-0">
@@ -216,7 +227,9 @@ export function BountyCard({
             <div className="flex items-center gap-1 text-slate-600 dark:text-slate-400 whitespace-nowrap text-xs">
               <Clock className="h-3.5 w-3.5 flex-shrink-0" />
               <span className="hidden sm:inline">{timeLeft}</span>
-              <span className="sm:hidden">{timeLeft.replace(" ago", "").replace(" from now", "")}</span>
+              <span className="sm:hidden">
+                {timeLeft.replace(" ago", "").replace(" from now", "")}
+              </span>
             </div>
           )}
           {bounty.applicantCount != null && bounty.applicantCount > 0 && (
