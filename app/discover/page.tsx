@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/static-components */
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
@@ -25,6 +24,24 @@ const isValidSort = (value: string | null): value is FilterState["sort"] => {
   );
 };
 
+// EmptyState component
+const EmptyState = ({ type }: { type: "projects" | "bounties" }) => (
+  <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
+    <div className="mb-4 p-6 bg-primary/5 rounded-full">
+      {type === "projects" ? (
+        <PackageOpen className="h-16 w-16 text-primary/50" />
+      ) : (
+        <Coins className="h-16 w-16 text-primary/50" />
+      )}
+    </div>
+    <h3 className="text-xl font-semibold mb-2">No {type} found</h3>
+    <p className="text-muted-foreground max-w-md">
+      Try adjusting your filters or search terms to find what you&#39;re looking
+      for.
+    </p>
+  </div>
+);
+
 export default function DiscoverPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -48,6 +65,17 @@ export default function DiscoverPage() {
     const timer = setTimeout(() => setIsLoading(false), 500);
     return () => clearTimeout(timer);
   }, []);
+
+  // Handle tab change and reset invalid sort options
+  const handleTabChange = (value: string) => {
+    const newTab = value as TabType;
+    setActiveTab(newTab);
+
+    // Reset sort to "newest" if switching to projects tab with "highestReward" sort
+    if (newTab === "projects" && filters.sort === "highestReward") {
+      setFilters((prev) => ({ ...prev, sort: "newest" }));
+    }
+  };
 
   // Update URL when state changes (debounced)
   useEffect(() => {
@@ -144,23 +172,6 @@ export default function DiscoverPage() {
   const projects = filteredProjects();
   const bounties = filteredBounties();
 
-  const EmptyState = ({ type }: { type: "projects" | "bounties" }) => (
-    <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
-      <div className="mb-4 p-6 bg-primary/5 rounded-full">
-        {type === "projects" ? (
-          <PackageOpen className="h-16 w-16 text-primary/50" />
-        ) : (
-          <Coins className="h-16 w-16 text-primary/50" />
-        )}
-      </div>
-      <h3 className="text-xl font-semibold mb-2">No {type} found</h3>
-      <p className="text-muted-foreground max-w-md">
-        Try adjusting your filters or search terms to find what you&#39;re
-        looking for.
-      </p>
-    </div>
-  );
-
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
@@ -180,10 +191,7 @@ export default function DiscoverPage() {
 
       {/* Main Content */}
       <div className="container mx-auto px-4 py-8">
-        <Tabs
-          value={activeTab}
-          onValueChange={(val) => setActiveTab(val as TabType)}
-        >
+        <Tabs value={activeTab} onValueChange={handleTabChange}>
           {/* Tab Navigation */}
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
             <TabsList className="bg-background-card text-gray-100 border border-border/50 p-1">
@@ -236,7 +244,6 @@ export default function DiscoverPage() {
                 ))}
               </div>
             ) : (
-              // eslint-disable-next-line react-hooks/static-components
               <EmptyState type="projects" />
             )}
           </TabsContent>

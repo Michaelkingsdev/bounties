@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowUpDown } from "lucide-react";
+import { useEffect } from "react";
 import {
   Select,
   SelectContent,
@@ -24,6 +25,13 @@ export function SortDropdown({
   const visibleOptions = SORT_OPTIONS.filter(
     (option) => !hiddenOptions.includes(option.value),
   );
+
+  // Fallback: if current value is hidden, reset to first visible option
+  useEffect(() => {
+    if (hiddenOptions.includes(value) && visibleOptions.length > 0) {
+      onChange(visibleOptions[0].value);
+    }
+  }, [value, hiddenOptions, visibleOptions, onChange]);
 
   return (
     <Select value={value} onValueChange={(val) => onChange(val as SortOption)}>

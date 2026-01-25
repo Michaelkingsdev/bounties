@@ -66,7 +66,7 @@ export function BountyCard({ bounty }: BountyCardProps) {
 
   return (
     <div className="block group">
-      <Card className="h-full bg-background-card border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 cursor-pointer">
+      <Card className="h-full bg-background-card border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10">
         <CardHeader className="space-y-3">
           <div className="flex items-start justify-between gap-2">
             <CardTitle className="text-lg font-semibold text-gray-100 group-hover:text-primary transition-colors line-clamp-2">
