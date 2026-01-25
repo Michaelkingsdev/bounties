@@ -100,14 +100,20 @@ export function ProjectBounties({ projectId }: ProjectBountiesProps) {
             {bountyTypes.map((type) => (
               <Badge
                 key={type.value}
+                asChild
                 variant="outline"
                 className={cn(
                   "cursor-pointer transition-all border-gray-700 text-gray-300 hover:border-primary hover:text-primary",
                   selectedType === type.value && "bg-primary text-primary-foreground border-primary"
                 )}
-                onClick={() => setSelectedType(type.value)}
               >
-                {type.label}
+                <button
+                  type="button"
+                  onClick={() => setSelectedType(type.value)}
+                  aria-pressed={selectedType === type.value}
+                >
+                  {type.label}
+                </button>
               </Badge>
             ))}
           </div>
@@ -120,14 +126,20 @@ export function ProjectBounties({ projectId }: ProjectBountiesProps) {
             {difficulties.map((difficulty) => (
               <Badge
                 key={difficulty.value}
+                asChild
                 variant="outline"
                 className={cn(
                   "cursor-pointer transition-all border-gray-700 text-gray-300 hover:border-primary hover:text-primary",
                   selectedDifficulty === difficulty.value && "bg-primary text-primary-foreground border-primary"
                 )}
-                onClick={() => setSelectedDifficulty(difficulty.value)}
               >
-                {difficulty.label}
+                <button
+                  type="button"
+                  onClick={() => setSelectedDifficulty(difficulty.value)}
+                  aria-pressed={selectedDifficulty === difficulty.value}
+                >
+                  {difficulty.label}
+                </button>
               </Badge>
             ))}
           </div>
@@ -140,14 +152,20 @@ export function ProjectBounties({ projectId }: ProjectBountiesProps) {
             {statuses.map((status) => (
               <Badge
                 key={status.value}
+                asChild
                 variant="outline"
                 className={cn(
                   "cursor-pointer transition-all border-gray-700 text-gray-300 hover:border-primary hover:text-primary",
                   selectedStatus === status.value && "bg-primary text-primary-foreground border-primary"
                 )}
-                onClick={() => setSelectedStatus(status.value)}
               >
-                {status.label}
+                <button
+                  type="button"
+                  onClick={() => setSelectedStatus(status.value)}
+                  aria-pressed={selectedStatus === status.value}
+                >
+                  {status.label}
+                </button>
               </Badge>
             ))}
           </div>
@@ -161,14 +179,20 @@ export function ProjectBounties({ projectId }: ProjectBountiesProps) {
               {availableTags.map((tag) => (
                 <Badge
                   key={tag}
+                  asChild
                   variant="outline"
                   className={cn(
                     "cursor-pointer transition-all border-gray-700 text-gray-300 hover:border-primary hover:text-primary",
                     selectedTags.includes(tag) && "bg-primary text-primary-foreground border-primary"
                   )}
-                  onClick={() => toggleTag(tag)}
                 >
-                  {tag}
+                  <button
+                    type="button"
+                    onClick={() => toggleTag(tag)}
+                    aria-pressed={selectedTags.includes(tag)}
+                  >
+                    {tag}
+                  </button>
                 </Badge>
               ))}
             </div>
