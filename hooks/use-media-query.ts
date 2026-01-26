@@ -29,7 +29,6 @@ export function useMediaQuery(query: string): boolean {
       media.addEventListener("change", listener)
     } else {
       // Fallback for older browsers (deprecated addListener method)
-      // eslint-disable-next-line @typescript-eslint/no-deprecated
       media.addListener(listener as (this: MediaQueryList, ev: MediaQueryListEvent) => void)
     }
 
@@ -38,7 +37,6 @@ export function useMediaQuery(query: string): boolean {
       if (media.removeEventListener) {
         media.removeEventListener("change", listener)
       } else {
-        // eslint-disable-next-line @typescript-eslint/no-deprecated
         media.removeListener(listener as (this: MediaQueryList, ev: MediaQueryListEvent) => void)
       }
     }
