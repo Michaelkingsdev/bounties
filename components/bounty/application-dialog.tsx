@@ -14,7 +14,7 @@ interface ApplicationDialogProps {
     trigger: React.ReactNode
 }
 
-export function ApplicationDialog({ bountyId, bountyTitle, onApply, trigger }: ApplicationDialogProps) {
+export function ApplicationDialog({ bountyTitle, onApply, trigger }: ApplicationDialogProps) {
     const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(false)
     const [coverLetter, setCoverLetter] = useState("")
@@ -42,7 +42,7 @@ export function ApplicationDialog({ bountyId, bountyTitle, onApply, trigger }: A
                 <DialogHeader>
                     <DialogTitle>Apply for Bounty</DialogTitle>
                     <DialogDescription>
-                        Submit your application for "{bountyTitle}".
+                        Submit your application for &quot;{bountyTitle}&quot;.
                     </DialogDescription>
                 </DialogHeader>
                 <form onSubmit={handleSubmit}>

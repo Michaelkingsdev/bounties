@@ -6,7 +6,7 @@ import { Separator } from "@/components/ui/separator"
 import type { Bounty } from "@/types/bounty"
 import { Github, Link2, Clock, Calendar, Check, Loader2 } from "lucide-react"
 import { formatDistanceToNow } from "date-fns"
-import { cn } from "@/lib/utils"
+// import { cn } from "@/lib/utils"
 // import { useRouter } from "next/navigation" // If we need refresh
 import { ApplicationDialog } from "./application-dialog"
 
@@ -22,7 +22,7 @@ export function BountySidebar({ bounty }: BountySidebarProps) {
   // Mock user ID for now - in real app this comes from auth context
   const CURRENT_USER_ID = "mock-user-123"
 
-  const isClaimable = bounty.status === "open"
+  // const isClaimable = bounty.status === "open"
 
   const createdTimeAgo = useMemo(
     () => formatDistanceToNow(new Date(bounty.createdAt), { addSuffix: true }),
@@ -105,7 +105,7 @@ export function BountySidebar({ bounty }: BountySidebarProps) {
 
     let label = 'Claim Bounty'
     let endpoint = `/api/bounties/${bounty.id}/claim`
-    let body = {}
+    const body = {}
 
     if (bounty.claimingModel === 'competition') {
       label = 'Join Competition'
