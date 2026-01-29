@@ -54,6 +54,7 @@ export class BountyLogic {
                 newBounty.claimedBy = undefined;
                 newBounty.claimedAt = undefined;
                 newBounty.claimExpiresAt = undefined;
+                newBounty.lastActivityAt = undefined;
             }
 
             // If inactive for too long
@@ -66,6 +67,7 @@ export class BountyLogic {
                     newBounty.claimedBy = undefined;
                     newBounty.claimedAt = undefined;
                     newBounty.claimExpiresAt = undefined;
+                    newBounty.lastActivityAt = undefined;
                 }
             }
         }
