@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { ReputationService } from "@/lib/services/reputation";
 import { getCurrentUser } from "@/lib/server-auth";
 
-export async function GET(request: NextRequest) {
+export async function GET() {
     try {
         const user = await getCurrentUser();
 

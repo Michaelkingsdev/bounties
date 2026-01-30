@@ -46,9 +46,9 @@ export class ReputationService {
         multipliers: { complexity?: number; speed?: number; quality?: number }
     ): number {
         let score = basePoints;
-        if (multipliers.complexity) score *= multipliers.complexity;
-        if (multipliers.speed) score *= multipliers.speed;
-        if (multipliers.quality) score *= multipliers.quality;
+        if (Number.isFinite(multipliers.complexity)) score *= multipliers.complexity!;
+        if (Number.isFinite(multipliers.speed)) score *= multipliers.speed!;
+        if (Number.isFinite(multipliers.quality)) score *= multipliers.quality!;
         return Math.round(score);
     }
 
@@ -94,5 +94,19 @@ export class ReputationService {
         console.log(`Maintainer ${maintainerId} rated ${contributorId} with ${rating}`);
         // Logic to update user score would go here
         return true;
+    }
+
+    static async linkWallet(
+        userId: string,
+        address: string
+    ): Promise<boolean> {
+        // Simulate DB update
+        await new Promise(resolve => setTimeout(resolve, 100));
+        const user = MOCK_REPUTATION_DB[userId];
+        if (user) {
+            user.walletAddress = address;
+            return true;
+        }
+        return false;
     }
 }
