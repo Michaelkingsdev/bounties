@@ -21,6 +21,12 @@ export function WithdrawalSection({ walletInfo }: WithdrawalSectionProps) {
         { id: '1', name: 'Chase Bank', last4: '4242', isPrimary: true },
     ];
 
+    const parsedAmount = parseFloat(amount);
+    const isValidAmount = !isNaN(parsedAmount) &&
+        isFinite(parsedAmount) &&
+        parsedAmount >= 10 &&
+        parsedAmount <= walletInfo.balance;
+
     const formatCurrency = (amount: number) => {
         return new Intl.NumberFormat("en-US", {
             style: "currency",
@@ -100,11 +106,19 @@ export function WithdrawalSection({ walletInfo }: WithdrawalSectionProps) {
                             <Separator className="my-2" />
                             <div className="flex justify-between font-semibold text-foreground">
                                 <span>You&apos;ll Receive</span>
-                                <span>{formatCurrency(Math.max(0, (parseFloat(amount) || 0) - 2.50))}</span>
+                                <span>{formatCurrency(Math.max(0, (parsedAmount || 0) - 2.50))}</span>
                             </div>
                         </div>
 
-                        <Button className="w-full h-12 text-md font-semibold" disabled={!amount || parseFloat(amount) < 10}>
+                        <Button
+                            className="w-full h-12 text-md font-semibold"
+                            disabled={!isValidAmount}
+                            onClick={() => {
+                                if (isValidAmount) {
+                                    // Handle withdrawal
+                                }
+                            }}
+                        >
                             Complete Withdrawal
                             <ArrowRight className="ml-2 h-4 w-4" />
                         </Button>

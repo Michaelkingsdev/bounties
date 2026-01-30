@@ -5,7 +5,7 @@ import { WalletActivity } from "@/types/wallet";
 import { Input } from "@/components/ui/input";
 import { Search, Download, ArrowUpRight, ArrowDownLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { format } from "date-fns";
+import { format, isValid } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 
 interface TransactionHistoryProps {
@@ -14,6 +14,11 @@ interface TransactionHistoryProps {
 
 export function TransactionHistory({ activity }: TransactionHistoryProps) {
     const [search, setSearch] = useState("");
+
+    const formatSafeDate = (dateString: string, formatString: string) => {
+        const date = new Date(dateString);
+        return isValid(date) ? format(date, formatString) : "—";
+    };
 
     const filteredActivity = activity.filter(item =>
         item.description?.toLowerCase().includes(search.toLowerCase()) ||
@@ -54,18 +59,25 @@ export function TransactionHistory({ activity }: TransactionHistoryProps) {
 
         const csvContent = [
             headers.join(","),
-            ...rows.map(row => row.map(cell => `"${cell.replace(/"/g, '""')}"`).join(","))
+            ...rows.map(row => row.map(cell => {
+                // Sanitize to prevent CSV injection
+                const sanitized = cell.replace(/"/g, '""');
+                return /^[=+\-@]/.test(sanitized) ? `"'${sanitized}"` : `"${sanitized}"`;
+            }).join(","))
         ].join("\n");
 
         const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.setAttribute("href", url);
-        link.setAttribute("download", `transactions_${format(new Date(), 'yyyyMMdd_HHmm')}.csv`);
+        link.setAttribute("download", `transactions_${formatSafeDate(new Date().toISOString(), 'yyyyMMdd_HHmm')}.csv`);
         link.style.visibility = 'hidden';
         document.body.appendChild(link);
         link.click();
+
+        // Cleanup
         document.body.removeChild(link);
+        setTimeout(() => URL.revokeObjectURL(url), 100);
     };
 
     return (
@@ -78,6 +90,7 @@ export function TransactionHistory({ activity }: TransactionHistoryProps) {
                         className="pl-9 bg-muted/50"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
+                        aria-label="Search transactions"
                     />
                 </div>
                 <div className="flex items-center gap-2 w-full sm:w-auto">
@@ -137,7 +150,7 @@ export function TransactionHistory({ activity }: TransactionHistoryProps) {
                                             </span>
                                         </td>
                                         <td className="py-4 px-4 text-right text-muted-foreground">
-                                            {format(new Date(item.date), 'MMM d, yyyy')}
+                                            {formatSafeDate(item.date, 'MMM d, yyyy')}
                                         </td>
                                         <td className="py-4 px-4 text-right">
                                             <Badge variant="outline" className={`capitalize text-[10px] px-2 py-0 h-5 ${getStatusColor(item.status)}`}>

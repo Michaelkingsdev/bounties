@@ -55,9 +55,10 @@ export default function WalletPage() {
                     <div className="rounded-xl border border-border bg-card p-6">
                         <h3 className="font-semibold mb-4">Quick Links</h3>
                         <div className="grid gap-3">
-                            <a href="#" className="text-sm text-primary hover:underline">How it works?</a>
-                            <a href="#" className="text-sm text-primary hover:underline">Fee Schedule</a>
-                            <a href="#" className="text-sm text-primary hover:underline">Support Center</a>
+                            {/* TODO: Implement these routes */}
+                            <span className="text-sm text-muted-foreground cursor-not-allowed">How it works?</span>
+                            <span className="text-sm text-muted-foreground cursor-not-allowed">Fee Schedule</span>
+                            <span className="text-sm text-muted-foreground cursor-not-allowed">Support Center</span>
                         </div>
                     </div>
                 </div>
