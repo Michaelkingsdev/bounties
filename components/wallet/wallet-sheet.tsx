@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import {
     Sheet,
     SheetContent,
@@ -134,13 +135,13 @@ export function WalletSheet({ walletInfo, trigger }: WalletSheetProps) {
                                     </div>
                                     <Button
                                         variant="link"
-                                        className="h-auto p-0 text-xs text-primary"
+                                        className="h-auto p-0 text-xs text-primary dark:text-primary"
                                         asChild
                                     >
-                                        <a href="/settings/security">
+                                        <Link href="/wallet">
                                             Go to Security Settings
                                             <ExternalLink className="ml-1 h-3 w-3" />
-                                        </a>
+                                        </Link>
                                     </Button>
                                 </div>
                             </div>
@@ -168,10 +169,10 @@ export function WalletSheet({ walletInfo, trigger }: WalletSheetProps) {
                                     className="h-auto p-0 text-xs text-primary"
                                     asChild
                                 >
-                                    <a href="/wallet">
+                                    <Link href="/wallet">
                                         View More
                                         <ExternalLink className="ml-1 h-3 w-3" />
-                                    </a>
+                                    </Link>
                                 </Button>
                             )}
                         </div>
@@ -194,7 +195,7 @@ export function WalletSheet({ walletInfo, trigger }: WalletSheetProps) {
                                         className="flex items-center justify-between rounded-lg bg-muted p-3 transition-colors hover:bg-muted/70"
                                     >
                                         <div className="flex items-center gap-3">
-                                            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
+                                            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary-foreground dark:text-primary">
                                                 {asset.tokenSymbol[0]}
                                             </div>
                                             <div>
@@ -226,6 +227,18 @@ export function WalletSheet({ walletInfo, trigger }: WalletSheetProps) {
                     <div>
                         <div className="mb-3 flex items-center justify-between">
                             <h3 className="font-semibold">Activity</h3>
+                            {walletInfo.recentActivity.length > 0 && (
+                                <Button
+                                    variant="link"
+                                    className="h-auto p-0 text-xs text-primary dark:text-primary"
+                                    asChild
+                                >
+                                    <Link href="/wallet">
+                                        View More
+                                        <ExternalLink className="ml-1 h-3 w-3" />
+                                    </Link>
+                                </Button>
+                            )}
                         </div>
 
                         {walletInfo.recentActivity.length === 0 ? (
@@ -250,8 +263,8 @@ export function WalletSheet({ walletInfo, trigger }: WalletSheetProps) {
                                         <div className="flex items-center gap-3">
                                             <div
                                                 className={`flex h-8 w-8 items-center justify-center rounded-full ${activity.type === "earning"
-                                                        ? "bg-green-500/10"
-                                                        : "bg-orange-500/10"
+                                                    ? "bg-green-500/10"
+                                                    : "bg-orange-500/10"
                                                     }`}
                                             >
                                                 {activity.type === "earning" ? (
