@@ -82,7 +82,8 @@ export class ReputationService {
 
     static async getReputationByWallet(address: string): Promise<ContributorReputation | null> {
         await new Promise(resolve => setTimeout(resolve, 100));
-        const user = Object.values(MOCK_REPUTATION_DB).find(u => u.walletAddress === address);
+        const normalizedAddress = address.toLowerCase();
+        const user = Object.values(MOCK_REPUTATION_DB).find(u => u.walletAddress?.toLowerCase() === normalizedAddress);
         return user || null;
     }
 
@@ -99,14 +100,27 @@ export class ReputationService {
     static async linkWallet(
         userId: string,
         address: string
-    ): Promise<boolean> {
+    ): Promise<{ success: boolean; error?: string }> {
         // Simulate DB update
         await new Promise(resolve => setTimeout(resolve, 100));
+
+        const normalizedAddress = address.toLowerCase();
+
+        // 1. Check for duplicates (Collision check)
+        const existingOwner = Object.values(MOCK_REPUTATION_DB).find(
+            u => u.walletAddress?.toLowerCase() === normalizedAddress
+        );
+
+        if (existingOwner) {
+            if (existingOwner.userId === userId) return { success: true }; // Already linked to this user
+            return { success: false, error: "Wallet already linked to another user" };
+        }
+
         const user = MOCK_REPUTATION_DB[userId];
         if (user) {
-            user.walletAddress = address;
-            return true;
+            user.walletAddress = normalizedAddress;
+            return { success: true };
         }
-        return false;
+        return { success: false, error: "User not found" };
     }
 }

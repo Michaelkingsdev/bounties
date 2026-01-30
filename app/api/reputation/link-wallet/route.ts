@@ -27,10 +27,14 @@ export async function POST(request: NextRequest) {
         }
 
         // 3. Service Call
-        const success = await ReputationService.linkWallet(userId, address);
+        // 3. Service Call
+        const result = await ReputationService.linkWallet(userId, address);
 
-        if (!success) {
-            return NextResponse.json({ error: "Failed to link wallet" }, { status: 500 });
+        if (!result.success) {
+            if (result.error === "Wallet already linked to another user") {
+                return NextResponse.json({ error: result.error }, { status: 409 });
+            }
+            return NextResponse.json({ error: result.error || "Failed to link wallet" }, { status: 500 });
         }
 
         return NextResponse.json({ success: true, message: "Wallet linked successfully" });
