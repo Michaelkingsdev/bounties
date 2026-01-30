@@ -12,11 +12,46 @@ interface AssetsListProps {
 
 export function AssetsList({ assets }: AssetsListProps) {
     const [search, setSearch] = useState("");
+    const [hideSmallBalances, setHideSmallBalances] = useState(false);
+    const [sortConfig, setSortConfig] = useState<{
+        key: 'tokenSymbol' | 'amount' | 'usdValue';
+        direction: 'asc' | 'desc';
+    }>({ key: 'usdValue', direction: 'desc' });
 
-    const filteredAssets = assets.filter(asset =>
-        asset.tokenName.toLowerCase().includes(search.toLowerCase()) ||
-        asset.tokenSymbol.toLowerCase().includes(search.toLowerCase())
-    );
+    const handleSort = (key: 'tokenSymbol' | 'amount' | 'usdValue') => {
+        setSortConfig(prev => ({
+            key,
+            direction: prev.key === key && prev.direction === 'desc' ? 'asc' : 'desc'
+        }));
+    };
+
+    const filteredAndSortedAssets = [...assets]
+        .filter(asset => {
+            const matchesSearch = asset.tokenName.toLowerCase().includes(search.toLowerCase()) ||
+                asset.tokenSymbol.toLowerCase().includes(search.toLowerCase());
+            const passesFilter = !hideSmallBalances || asset.usdValue >= 1;
+            return matchesSearch && passesFilter;
+        })
+        .sort((a, b) => {
+            const aValue = a[sortConfig.key];
+            const bValue = b[sortConfig.key];
+
+            if (typeof aValue === 'string' && typeof bValue === 'string') {
+                return sortConfig.direction === 'asc'
+                    ? aValue.localeCompare(bValue)
+                    : bValue.localeCompare(aValue);
+            }
+
+            if (typeof aValue === 'number' && typeof bValue === 'number') {
+                return sortConfig.direction === 'asc'
+                    ? aValue - bValue
+                    : bValue - aValue;
+            }
+
+            return 0;
+        });
+
+    const totalUsd = assets.reduce((acc, c) => acc + c.usdValue, 0);
 
     const formatCurrency = (amount: number) => {
         return new Intl.NumberFormat("en-US", {
@@ -38,13 +73,25 @@ export function AssetsList({ assets }: AssetsListProps) {
                     />
                 </div>
                 <div className="flex items-center gap-2 w-full sm:w-auto">
-                    <Button variant="outline" size="sm" className="flex-1 sm:flex-none">
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        className="flex-1 sm:flex-none"
+                        onClick={() => handleSort('tokenSymbol')}
+                        title="Sort by Symbol"
+                    >
                         <ArrowUpDown className="mr-2 h-4 w-4" />
-                        Sort
+                        Sort Symbol
                     </Button>
-                    <Button variant="outline" size="sm" className="flex-1 sm:flex-none">
+                    <Button
+                        variant={hideSmallBalances ? "default" : "outline"}
+                        size="sm"
+                        className="flex-1 sm:flex-none"
+                        onClick={() => setHideSmallBalances(!hideSmallBalances)}
+                        title={hideSmallBalances ? "Showing only >$1" : "Filter small balances"}
+                    >
                         <Filter className="mr-2 h-4 w-4" />
-                        Filter
+                        {hideSmallBalances ? "Filtering" : "Filter"}
                     </Button>
                 </div>
             </div>
@@ -62,14 +109,14 @@ export function AssetsList({ assets }: AssetsListProps) {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-border">
-                            {filteredAssets.length === 0 ? (
+                            {filteredAndSortedAssets.length === 0 ? (
                                 <tr>
                                     <td colSpan={5} className="py-12 text-center text-muted-foreground">
                                         No assets found matching your search.
                                     </td>
                                 </tr>
                             ) : (
-                                filteredAssets.map((asset) => (
+                                filteredAndSortedAssets.map((asset) => (
                                     <tr key={asset.id} className="hover:bg-muted/30 transition-colors cursor-pointer group">
                                         <td className="py-4 px-4">
                                             <div className="flex items-center gap-3">
@@ -87,14 +134,14 @@ export function AssetsList({ assets }: AssetsListProps) {
                                             <div className="text-xs text-muted-foreground">{asset.tokenSymbol}</div>
                                         </td>
                                         <td className="py-4 px-4 text-right">
-                                            {formatCurrency(asset.usdValue / asset.amount)}
+                                            {formatCurrency(asset.amount ? asset.usdValue / asset.amount : 0)}
                                         </td>
                                         <td className="py-4 px-4 text-right">
                                             <div className="font-medium">{formatCurrency(asset.usdValue)}</div>
                                         </td>
                                         <td className="py-4 px-4 text-right hidden md:table-cell">
                                             <div className="text-xs font-medium">
-                                                {((asset.usdValue / assets.reduce((acc, current) => acc + current.usdValue, 0)) * 100).toFixed(1)}%
+                                                {(totalUsd ? (asset.usdValue / totalUsd) * 100 : 0).toFixed(1)}%
                                             </div>
                                         </td>
                                     </tr>

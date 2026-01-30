@@ -5,7 +5,7 @@ import { WalletInfo } from "@/types/wallet";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Building, Plus, ArrowRight, Wallet, History, Info } from "lucide-react";
+import { Building, Plus, ArrowRight, History, Info } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 
@@ -99,7 +99,7 @@ export function WithdrawalSection({ walletInfo }: WithdrawalSectionProps) {
                             </div>
                             <Separator className="my-2" />
                             <div className="flex justify-between font-semibold text-foreground">
-                                <span>You'll Receive</span>
+                                <span>You&apos;ll Receive</span>
                                 <span>{formatCurrency(Math.max(0, (parseFloat(amount) || 0) - 2.50))}</span>
                             </div>
                         </div>

@@ -39,15 +39,16 @@ export function WalletOverview({ walletInfo }: WalletOverviewProps) {
 
                     <div className="space-y-2">
                         <div className="text-sm text-muted-foreground">Wallet Address</div>
-                        <div className="flex items-center justify-between rounded-lg bg-muted p-2.5">
+                        <div className="flex items-center justify-between rounded-lg bg-muted p-2.5" title={walletInfo.address}>
                             <div className="truncate font-mono text-xs">
-                                {walletInfo.address}
+                                {truncateStellarAddress(walletInfo.address)}
                             </div>
                             <Button
                                 variant="ghost"
                                 size="icon"
                                 onClick={handleCopyAddress}
                                 className="h-8 w-8 shrink-0 ml-1"
+                                title="Copy full address"
                             >
                                 {copied ? (
                                     <Check className="h-3.5 w-3.5 text-green-500" />

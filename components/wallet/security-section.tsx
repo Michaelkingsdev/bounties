@@ -3,8 +3,7 @@
 import { WalletInfo } from "@/types/wallet";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
-import { Shield, Smartphone, Key, CircleAlert, CheckCircle2, ListFilter, MonitorPlay } from "lucide-react";
+import { Smartphone, Key, CircleAlert, CheckCircle2, ListFilter, MonitorPlay } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 
@@ -37,7 +36,7 @@ export function SecuritySection({ walletInfo }: SecuritySectionProps) {
                                 <Badge variant={walletInfo.has2FA ? "outline" : "secondary"} className={walletInfo.has2FA ? "text-green-500 border-green-500/20 bg-green-500/5" : ""}>
                                     {walletInfo.has2FA ? "Enabled" : "Disabled"}
                                 </Badge>
-                                <Switch checked={walletInfo.has2FA} />
+                                <Switch checked={walletInfo.has2FA} disabled />
                             </div>
                         </div>
 

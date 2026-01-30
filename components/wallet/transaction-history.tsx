@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { WalletActivity } from "@/types/wallet";
 import { Input } from "@/components/ui/input";
-import { Search, Download, ArrowUpRight, ArrowDownLeft, ExternalLink } from "lucide-react";
+import { Search, Download, ArrowUpRight, ArrowDownLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
@@ -40,6 +40,34 @@ export function TransactionHistory({ activity }: TransactionHistoryProps) {
         }
     };
 
+    const handleExportCsv = () => {
+        const headers = ["ID", "Type", "Description", "Amount", "Currency", "Date", "Status"];
+        const rows = filteredActivity.map(item => [
+            item.id,
+            item.type,
+            item.description || "",
+            item.amount.toString(),
+            item.currency,
+            format(new Date(item.date), 'yyyy-MM-dd HH:mm:ss'),
+            item.status
+        ]);
+
+        const csvContent = [
+            headers.join(","),
+            ...rows.map(row => row.map(cell => `"${cell.replace(/"/g, '""')}"`).join(","))
+        ].join("\n");
+
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.setAttribute("href", url);
+        link.setAttribute("download", `transactions_${format(new Date(), 'yyyyMMdd_HHmm')}.csv`);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
     return (
         <div className="space-y-4">
             <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
@@ -53,7 +81,13 @@ export function TransactionHistory({ activity }: TransactionHistoryProps) {
                     />
                 </div>
                 <div className="flex items-center gap-2 w-full sm:w-auto">
-                    <Button variant="outline" size="sm" className="flex-1 sm:flex-none">
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        className="flex-1 sm:flex-none"
+                        onClick={handleExportCsv}
+                        disabled={filteredActivity.length === 0}
+                    >
                         <Download className="mr-2 h-4 w-4" />
                         Export CSV
                     </Button>
