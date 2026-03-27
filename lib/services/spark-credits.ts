@@ -6,7 +6,7 @@ import {
 
 // Mock Data Store (In-memory for prototype)
 const MOCK_CREDITS_DB: Record<string, number> = {
-  "user-1": 5,
+  "user-1": 6,
   "user-2": 2,
   "user-3": 0,
 };

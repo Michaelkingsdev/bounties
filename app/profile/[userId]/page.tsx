@@ -2,10 +2,7 @@
 
 import { useContributorReputation } from "@/hooks/use-reputation";
 import { useBounties } from "@/hooks/use-bounties";
-import {
-  useSparkCreditsBalance,
-  useSparkCreditsHistory,
-} from "@/hooks/use-spark-credits";
+import { useSparkCreditsHistory } from "@/hooks/use-spark-credits";
 import { ReputationCard } from "@/components/reputation/reputation-card";
 import { CompletionHistory } from "@/components/reputation/completion-history";
 import { MyClaims, type MyClaim } from "@/components/reputation/my-claims";

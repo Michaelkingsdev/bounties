@@ -17,10 +17,24 @@ interface CreditBalanceProps {
 }
 
 export function CreditBalance({ userId, className }: CreditBalanceProps) {
-  const { data, isLoading } = useSparkCreditsBalance(userId);
+  const { data, isLoading, isError } = useSparkCreditsBalance(userId);
 
   if (isLoading) {
     return <Skeleton className="h-6 w-14 rounded-full" />;
+  }
+
+  if (isError) {
+    return (
+      <div
+        className={cn(
+          "flex items-center gap-1 px-2 py-1 rounded-full text-sm font-medium border border-border/50 bg-secondary/10 text-muted-foreground",
+          className,
+        )}
+      >
+        <Zap className="h-3.5 w-3.5" />
+        <span>—</span>
+      </div>
+    );
   }
 
   const balance = data?.balance ?? 0;
