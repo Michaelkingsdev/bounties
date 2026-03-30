@@ -7,6 +7,7 @@ import { SearchCommand } from "@/components/search-command";
 import { NavRankBadge } from "@/components/leaderboard/nav-rank-badge";
 import { NotificationCenter } from "@/components/notifications/notification-center";
 import { WalletSheet } from "@/components/wallet/wallet-sheet";
+import { CreditBalance } from "@/components/reputation/credit-balance";
 import { mockWalletInfo } from "@/lib/mock-wallet";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "./mode-toggle";
@@ -93,6 +94,7 @@ export function GlobalNavbar() {
 
         <div className="flex items-center gap-2">
           <NavRankBadge userId="user-1" className="hidden sm:flex" />
+          <CreditBalance userId="user-1" className="hidden sm:flex" />
           {/* TODO: Replace with actual auth user ID */}
 
           <NotificationCenter />
